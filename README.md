@@ -34,4 +34,6 @@ Usage
     
 Please report Issues and Errors
 
+Smart Connect Core by https://github.com/nichtNicolas
+
 Made with and for ESP-12-E
