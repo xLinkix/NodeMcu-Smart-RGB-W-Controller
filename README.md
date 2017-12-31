@@ -3,11 +3,9 @@ Smart RGBW Controller for Node Mcu
 
 Your Wifi password should not contain only "0"!
 
-D1 and D2 are safe pins.
-
 Pins:
-D1 Red
-D2 Green
+D1 Red      Safe Pin
+D2 Green    Safe Pin
 D3 Blue
 
 D5 White
