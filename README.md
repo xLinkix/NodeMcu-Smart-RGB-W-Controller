@@ -13,9 +13,10 @@ D3 Blue
 D5 White
 
 Usage
-1.  Connect to the "Smart_Connect" Wifi
-2.  type 192.168.4.1 into your browser and past your showed Wifi into the first bar and your Wifi password into the second
-3.  Control the RGB Led with this setup
+1.  Flash the ino with Arduino https://www.arduino.cc/en/Main/Software on the Node
+2.  Connect to the "Smart_Connect" Wifi
+3.  type 192.168.4.1 into your browser and past your showed Wifi into the first bar and your Wifi password into the second
+4.  Control the RGB Led with this setup
     http://deviceip/?rgb=bbbgggrrr
     bbb = blue 0-100%
     ggg = green 0-100%
