@@ -1,6 +1,8 @@
 # NodeMcu-Smart-RGB-W-Controller
 Smart RGBW Controller for Node Mcu
 
+ESP 12-E PWM Dimming -> you need external 3v Mosfets to contorl your LED Stripe
+
 Your Wifi password should not contain only "0"!
 
 Pins:
