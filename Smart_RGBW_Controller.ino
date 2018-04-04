@@ -10,13 +10,27 @@ String st;
 String content;
 int statusCode;
 
-int restartmin = 30;
+int restartmin = 60;
+
+const int d1 = 5;
+const int d2 = 4;
+const int d3 = 0;
+const int d4 = 2;
+const int d5 = 14;
+const int d6 = 12;
+const int d7 = 13;
+const int d8 = 15;
+const int d9 = 3;
+const int d10 = 1;
 
 //Pins
-const int ledPinR = 5; // GPIO5 D1 for Safe mode
-const int ledPinG = 4; // GPIO4 D2 for Safe mode
-const int ledPinB = 2; // GPIO2 D3 for Safe mode
-const int ledPinW = 14; // GPIO12 D5 for Safe mode
+const int ledPinR = d1; 
+const int ledPinG = d2; 
+const int ledPinB = d3; 
+const int ledPinW = d5; 
+
+const int powerRelais = d6; // GPIO13 D7
+const int powerRelais2 = d7;
 
 //RGBW
 int r = 0;
@@ -24,17 +38,35 @@ int g = 0;
 int b = 0;
 int w = 0;
 
+int cycle;
+float cycleNum;
+
 void setup() {
   Serial.begin(115200); //baud
   EEPROM.begin(512); 
 
-  //Start PWm Pins max duty = 1023
+  //Define Pins
+  pinMode(ledPinR,OUTPUT);
+  pinMode(ledPinG,OUTPUT);
+  pinMode(ledPinB,OUTPUT);
+  pinMode(ledPinW,OUTPUT);
+
+  pinMode(powerRelais,OUTPUT);
+  pinMode(powerRelais2,OUTPUT);
+  
+  //Start PWm Pins max duty = 255 o 1023
+  cycle = 1023;
+  cycleNum = cycle / 10;
   analogWrite(ledPinR, 0);
   analogWrite(ledPinG, 0);
   analogWrite(ledPinB, 0);
   analogWrite(ledPinW, 0); 
+
+  digitalWrite(powerRelais, HIGH);
+  digitalWrite(powerRelais2, HIGH);
   
   Serial.println("System Online");
+  Serial.println("Version: 1.2");
 
   restartmin = restartmin *60 * 1000;
   
@@ -208,57 +240,56 @@ void createWebServer(int webtype)
   } else if (webtype == 0) {
     server.on("/", []() {
     String message = "";
-      int pRGB = 0;
       
-      int pR = 0;
-      int pG = 0;
-      int pB = 0;
-      int pW = 0;
-
-      float pfR = 0;
-      float pfG = 0;
-      float pfB = 0;
-      float pfW = 0;
-
-      if (server.arg("rgb")== ""){     //Parameter not found
+      if (server.arg("r")== ""){     //Parameter not found
       }else{     //Parameter found  
-        pRGB = server.arg("rgb").toInt();
+          float ppR = server.arg("r").toInt();
+          ppR * cycleNum;
+          int pR = (int)ppR;
+          if(pR > cycle) pR = cycle;
+          if(pR >= 0) r = pR;
       }
+
+      if (server.arg("g")== ""){     //Parameter not found
+      }else{     //Parameter found  
+          float ppG = server.arg("g").toInt();
+          ppG * cycleNum;
+          int pG = (int)ppG;
+          if(pG > cycle) pG = cycle;
+          if(pG >= 0) g = pG;
+      }
+
+      if (server.arg("b")== ""){     //Parameter not found
+      }else{     //Parameter found  
+          float ppB = server.arg("b").toInt();
+          ppB * cycleNum;
+          int pB = (int)ppB;
+          if(pB > cycle) pB = cycle;
+          if(pB >= 0) b = pB;
+      }
+
       if (server.arg("w")== ""){     //Parameter not found
       }else{     //Parameter found  
-        pW = server.arg("w").toInt();
+          float ppW = server.arg("w").toInt();
+          ppW * cycleNum;
+          int pW = (int)ppW;
+          if(pW > cycle) pW = cycle;
+          if(pW >= 0) w = pW;
       }
       
-      Serial.println("-----");
-      Serial.println(pRGB);
-      Serial.println(pW);
-      Serial.println("-----");
+      Serial.print("R: ");
+      Serial.println(r);
       
-      pB = pRGB/1000000;
-      
-      pG = pRGB/1000;
-      pG = pG-(pB*1000);
-      
-      pR = pRGB-((pB*1000000)+(pG*1000));
+      Serial.print("G: ");
+      Serial.println(g);
 
-      Serial.println(pB);
-      Serial.println(pG);
-      Serial.println(pR);
+      Serial.print("B: ");
+      Serial.println(b);
 
-      Serial.println(pW);
-      
-      if(pR >= 0 && pR <= 100) pfR = pR*10.23;
-      if(pG >= 0 && pG <= 100) pfG = pG*10.23;
-      if(pB >= 0 && pB <= 100) pfB = pB*10.23;
-      
-      if(pW >= 0 && pW <= 100) pfW = pW*10.23;
-           
-      r = (int)pfR;
-      g = (int)pfG;
-      b = (int)pfB;
-      
-      w = (int)pfW;
-      
+      Serial.print("W: ");
+      Serial.println(w);
+      Serial.println("----------");
+      message += millis() / 1000;           
       server.send(200, "text/html", message);
     });
     server.on("/cleareeprom", []() {
@@ -284,16 +315,23 @@ void createWebServer(int webtype)
   }
 }
 
-  void loop() {
-    server.handleClient();  
-
-    //Color Change
-    analogWrite(ledPinR, r);
-    analogWrite(ledPinG, g);
-    analogWrite(ledPinB, b);
-    analogWrite(ledPinW, w);
+void reboot(){
+  if(millis() > restartmin){
+    if(r == 0 && g == 0 && b == 0 && w == 0){
+      ESP.restart();
+    }      
+  }   
+}
+  
+void loop() {
+  server.handleClient();  
     
-    /*if(millis() > restartmin){
-           ESP.restart();
-    }*/
-  }
+  //Color Change
+  analogWrite(ledPinR, r);
+  analogWrite(ledPinG, g);
+  analogWrite(ledPinB, b);
+  analogWrite(ledPinW, w);
+
+
+  reboot();
+}
