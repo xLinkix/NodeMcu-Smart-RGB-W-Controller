@@ -6,8 +6,8 @@ ESP 12-E PWM Dimming -> you need external 3v Mosfets to contorl your LED Stripe
 Your Wifi password should not contain only "0"!
 
 Pins:
-D1 Red      Safe Pin
-D2 Green    Safe Pin
+D1 Red     
+D2 Green    
 D3 Blue
 
 D5 White
@@ -17,22 +17,21 @@ Usage
 2.  Connect to the "Smart_Connect" Wifi
 3.  type 192.168.4.1 into your browser and past your showed Wifi into the first bar and your Wifi password into the second
 4.  Control the RGB Led with this setup
-    http://deviceip/?rgb=bbbgggrrr
-    bbb = blue 0-100%
-    ggg = green 0-100%
-    rbb = red 0-100%
+
+    http://deviceip/?r=rrr&b=bbb&g=ggg&w=www
     
-    Control the white Led with 
-    http://deviceip/?w=www
+    rrr = red 0-100%
+    ggg = green 0-100%
+    bbb = blue 0-100%        
     www = white 0-100%
+    
     
     Example:
     Full On
     http://deviceip/?rgb=100100100
-    http://deviceip/?w=100
     
     Full green
-    http://deviceip/?rgb=100000 or ?rgb=000100000
+    http://deviceip/?g=100 or 
     
 Please report Issues and Errors
 
