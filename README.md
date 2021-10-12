@@ -26,9 +26,8 @@ Usage
     www = white 0-100
     
     
-    Example:
-    
-    Full green
+    Example for 100% Green:
+  
         http://deviceip/?g=100 
     
 Please report Issues and Errors
