@@ -15,10 +15,10 @@ D5 White
 Usage
 1.  Flash the .ino (with e.g. Arduino https://www.arduino.cc/en/Main/Software) on the ESP
 2.  Connect to the "Smart_Connect" Wifi
-3.  type 192.168.4.1 into your browser and login to your Wifi-Network showed in the list
+3.  Type 192.168.4.1 into your browser and login to your Wifi-Network showed in the list
 4.  Control the RGB Led with this setup
 
-    http://deviceip/?r=rrr&b=bbb&g=ggg&w=www
+        http://deviceip/?r=rrr&b=bbb&g=ggg&w=www
     
     rrr = red 0-100
     ggg = green 0-100
@@ -28,7 +28,7 @@ Usage
     
     Example:
     
-        Full green
+    Full green
         http://deviceip/?g=100 
     
 Please report Issues and Errors
